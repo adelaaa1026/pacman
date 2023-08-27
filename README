@@ -1,0 +1,56 @@
+Pacman README
+
+Overview:
+    My PacMan app has a PacMan that moves around and can change directions via
+    the arrow keys (up/down/left/right). There are also four ghosts that move around.
+    If the ghosts are in Chase mode, they run after Pacman; in Scatter mode, they
+    run after a corner of the maze; in Frightened mode, they move randomly.
+    The game alternates between 20 seconds of Chase mode and 7 seconds of Scatter mode.
+    The Frightened mode can be started by PacMan eating an energizer and it lasts 7 seconds.
+    The ghosts are released from the pen every 3 seconds, if there is any ghost left.
+    The goal of the game is to control PacMan to eat dots and energizers, and to avoid
+    ghosts in Chase and Scatter mode and to eat ghosts in Frightened mode.
+
+    There are in total eight classes: Game, PacMan, Ghost, Map, MazeSquare, BoardCoordinates,
+    Dot, and Energizer. There are two enum classes: GhostMode, Direction, and GhostName. They interact
+    in the following way:
+    - The Game class contains PacMan, Ghost, and Map class.
+    - The Map class contains MazeSquare, BoardCoordinates, Dot, and Energizer class.
+    - GhostMode provides different enums to represent modes of the ghosts (CHASE, SCATTER, FRIGHTENED)
+    - GhostName provides different enums to represent different ghosts (BLINKY, PINKY, INKY, CLYDE)
+
+Design Choices:
+    Since all four ghosts have the same functionality (e.g. moving around, colliding with PacMan)
+    but different properties (e.g. color, initial location, the order to leave the pen), I decided to
+    write a single Ghost class to represent four ghosts, and passed in their different properties
+    in the parameters.
+
+    Also, ghosts, dots, and energizers can all collide with PacMan and update the current score,
+    but they have different ways of doing it. For example, after a collision, ghosts need to
+    return to the pen whereas dots need to removed from the maze. So I decided to write a
+    Collidable interface.
+
+    In addition, I wrote a breadth-first-search method to help Pacman find the quickest direction
+    to get to the target. The method first uses a for-loop to iterate all four directions,
+    enqueues the valid board coordinates in a queue, and documents the corresponding directions in
+    a 2-D array. Then it dequeues the first coordinate as the currentCell and adds new
+    valid coordinates of the currentCell to the queue. The method continues this process of
+    enqueuing and dequeuing until the whole board is gone through and the square closest to the
+    target is found. The direction that was documented in the 2-D array in that square is
+    returned.
+
+    To decide the random direction to turn for ghosts in the Frightened mode, I wrote an
+    arrayList called validDirections because the number of valid directions it can move
+    is not fixed depending on the current location of the ghost. I iterate through all
+    four directions, adds the valid directions to the arrayList and generates a random
+    index in the arrayList to become the new direction.
+
+    When ghosts are released from the ghost pen in Frightened mode, they need to be released in
+    a "first in, first out" order. So I wrote a queue to document and release the ghosts in the pen.
+
+Known Bugs:
+    None.
+
+Debugging Collaborators:
+    No.
+
